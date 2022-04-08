@@ -1,20 +1,20 @@
 import React from "react"
 import { Router } from "@reach/router"
-import { login, logout, isAuthenticated, getProfile } from "../utils/auth"
+import { login, logout, auth_token_is, get_profile } from "../utils/auth"
 import { Link } from "gatsby"
 
 const Home = () => <p>Home</p>
 const MyAccount = () => <p>My Account</p>
 const Settings = () => <p>Settings</p>
-const Billing = () => <p>Billing</p>
+const Portfolio = () => <p>Portfolio</p>
 
 const Account = () => {
-  if (!isAuthenticated()) {
+  if (!auth_token_is()) {
     login()
     return <p>Redirecting to login...</p>
   }
 
-  const user = getProfile()
+  const user = get_profile()
 
   return (
     <>
@@ -22,7 +22,7 @@ const Account = () => {
         <Link to="/">Home</Link>{" "}
         <Link to="/account/">My Account</Link>{" "}
         <Link to="/account/settings/">Settings</Link>{" "}
-        <Link to="/account/billing/">Billing</Link>{" "}
+        <Link to="/account/portfolio/">Portfolio</Link>{" "}
         <a
           href="#logout"
           onClick={e => {
@@ -38,7 +38,7 @@ const Account = () => {
         <Home path="/" />
         <MyAccount path="/account/" />
         <Settings path="/account/settings" />
-        <Billing path="/account/billing" />
+        <Portfolio path="/account/portfolio" />
       </Router>
     </>
   )

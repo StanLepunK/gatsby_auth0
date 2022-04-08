@@ -1,6 +1,12 @@
+/**
+ *  AUTH
+ * v 0.1.0
+ * 2019-2022
+ * */
+
 import auth0 from "auth0-js"
 
-export const isBrowser = typeof window !== "undefined"
+export const browser_is = typeof window !== "undefined"
 
 const tokens = {
   idToken: false,
@@ -9,11 +15,11 @@ const tokens = {
 
 let user = {}
 
-export const isAuthenticated = () => {
+export const auth_token_is = () => {
   return tokens.idToken !== false
 }
 
-const auth = isBrowser
+const auth = browser_is
   ? new auth0.WebAuth({
       domain: process.env.AUTH0_DOMAIN,
       clientID: process.env.AUTH0_CLIENTID,
@@ -24,7 +30,7 @@ const auth = isBrowser
   : {}
 
 export const login = () => {
-  if (!isBrowser) {
+  if (!browser_is) {
     return;
   }
   auth.authorize();
@@ -41,7 +47,8 @@ export const logout = () => {
   })
 }
 
-const setSession = (cb = () => {}) => (err, authResult) => {
+// cb is for callback
+const set_session = (cb = () => {}) => (err, authResult) => {
   if (err) {
     if (err.error === "login_required") {
       login()
@@ -60,7 +67,7 @@ const setSession = (cb = () => {}) => (err, authResult) => {
   }
 }
 
-export const checkSession = callback => {
+export const check_session = callback => {
   const isLoggedIn = window.localStorage.getItem("isLoggedIn")
   if (isLoggedIn === "false" || isLoggedIn === null) {
     callback()
@@ -70,14 +77,14 @@ export const checkSession = callback => {
     .map(route => window.location.pathname.includes(route))
     .some(route => route)
   if (isProtectedRoute) {
-    auth.checkSession({}, setSession(callback))
+    auth.checkSession({}, set_session(callback))
   }
 }
 
-export const handleAuthentication = () => {
-  auth.parseHash(setSession())
-}
+// export const use_authentication = () => {
+//   auth.parseHash(set_session())
+// }
 
-export const getProfile = () => {
+export const get_profile = () => {
   return user
 }
